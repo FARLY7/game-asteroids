@@ -7,7 +7,7 @@ public class Asteroid : MonoBehaviour
     public float size = 1.0f;
     public float minSize = 0.5f;
     public float maxSize = 1.5f;
-    public float speed = 50.0f;
+    public float speed = 7.0f;
     public float maxLifetime = 10.0f;
 
     private SpriteRenderer _spriteRenderer;
@@ -32,4 +32,35 @@ public class Asteroid : MonoBehaviour
         _rigidBody.AddForce(trajectory * this.speed);
         Destroy(this.gameObject, maxLifetime);
     }
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if(collision.gameObject.CompareTag("Missile"))
+        {
+			if (this.size > 1.2f)
+			{
+                CreateSplit();
+				CreateSplit();
+				CreateSplit();
+			}
+			else if(this.size > 0.9f)
+            {
+				CreateSplit();
+				CreateSplit();
+			}
+
+			Destroy(this.gameObject);	
+        }
+	}
+
+    private void CreateSplit()
+    {
+        Vector2 position = this.transform.position;
+        position += Random.insideUnitCircle * 0.5f;
+
+        Asteroid asteroid = Instantiate(this, position, this.transform.rotation);
+        asteroid.size = this.size - 0.3f;
+        asteroid.SetTrajectory(Random.insideUnitCircle.normalized * this.speed * 2);
+	}
+
 }
