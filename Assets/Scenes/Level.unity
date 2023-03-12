@@ -207,6 +207,55 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &544814946
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 544814948}
+  - component: {fileID: 544814947}
+  m_Layer: 0
+  m_Name: AsteroidSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &544814947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544814946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7885709f4c15e49f98a3fc38e5c0b9fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  asteroidPrefab: {fileID: 462260111240405899, guid: 59369996d4bd84ef9b7b53f6179919a8, type: 3}
+  spawnRate: 1.5
+  spawnAmount: 1
+  spawnDistance: 12
+  trajectoryVariance: 15
+--- !u!4 &544814948
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544814946}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2003079457
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +269,7 @@ GameObject:
   - component: {fileID: 2003079458}
   - component: {fileID: 2003079461}
   - component: {fileID: 2003079462}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -241,7 +290,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0.25
-  m_AngularDrag: 0
+  m_AngularDrag: 40
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -353,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd6d2fdf2ce441329a86f9cd9c3267d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrustSpeed: 2
-  turnSpeed: 2
+  thrustSpeed: 2.5
+  turnSpeed: 6
   fireRate: 0.15
   missilePrefab: {fileID: 6082109395732866353, guid: 9f51a533cab534f9ebcbc7c01a6d1f3c, type: 3}

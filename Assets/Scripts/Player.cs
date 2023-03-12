@@ -24,10 +24,16 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        _thrust = Input.GetKey(KeyCode.W);
-        _turnRight = Input.GetKey(KeyCode.D);
-		_turnLeft = Input.GetKey(KeyCode.A);
-        _fire = Input.GetKey(KeyCode.Space);
+        _thrust     = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+        _turnRight  = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+		_turnLeft   = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+        _fire       = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
+
+		if (_fire && Time.time > _nextFire)
+		{
+			_nextFire = Time.time + this.fireRate;
+			Shoot();
+		}
 	}
 
 	private void FixedUpdate()
@@ -41,19 +47,13 @@ public class Player : MonoBehaviour
         {
             if (_turnRight)
             {
-                _rigidBody.MoveRotation(_rigidBody.rotation - this.turnSpeed);
+                _rigidBody.AddTorque(-this.turnSpeed);
             }
             if (_turnLeft)
             {
-                _rigidBody.MoveRotation(_rigidBody.rotation + this.turnSpeed);
+				_rigidBody.AddTorque(this.turnSpeed);
             }
         }
-
-        if(_fire && Time.time > _nextFire)
-        {
-			_nextFire = Time.time + this.fireRate;
-            Shoot();
-		}
 	}
 
     private void Shoot()
