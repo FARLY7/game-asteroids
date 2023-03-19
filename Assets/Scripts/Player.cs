@@ -56,7 +56,19 @@ public class Player : MonoBehaviour
         }
 	}
 
-    private void Shoot()
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if(collision.gameObject.CompareTag("Asteroid"))
+		{
+			_rigidBody.velocity = Vector2.zero;
+			_rigidBody.angularVelocity = 0.0f;
+			this.gameObject.SetActive(false);
+
+			FindObjectOfType<GameManager>().PlayerDied();
+		}
+	}
+
+	private void Shoot()
     {
 		Missile missile = Instantiate(this.missilePrefab, transform.position, transform.rotation);
 		missile.Fire(transform.up);
