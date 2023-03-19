@@ -4,7 +4,9 @@ public class GameManager : MonoBehaviour
 {
 	public Player player;
 	public ParticleSystem explosion;
-	
+	public TMPro.TMP_Text scoreText;
+	public TMPro.TMP_Text livesText;
+
 	public float respawnTime = 3.0f;
 	public float respawnInvulnerabilityTime = 3.0f;
 	public int lives = 3;
@@ -27,6 +29,8 @@ public class GameManager : MonoBehaviour
 		{
 			this.score += 25;
 		}
+
+		this.scoreText.text = this.score.ToString();
 	}
 
 	public void PlayerDied()
@@ -35,6 +39,7 @@ public class GameManager : MonoBehaviour
 		this.explosion.transform.position = this.player.transform.position;
 
 		this.lives--;
+		this.livesText.text = this.lives.ToString();
 
 		if (this.lives <= 0)
 		{
@@ -64,5 +69,7 @@ public class GameManager : MonoBehaviour
 	{
 		this.lives = 3;
 		this.score = 0;
+		this.scoreText.text = this.score.ToString();
+		this.livesText.text = this.lives.ToString();
 	}
 }
