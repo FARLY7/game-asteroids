@@ -1,0 +1,70 @@
+name: pipeline
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    branches: [main]
+
+jobs:
+  build:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          # - StandaloneWindows # Build a Windows standalone.
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+          # - WebGL # WebGL.
+        include:
+        - targetPlatform: StandaloneOSX
+          BUILD_NAME: macos
+        - targetPlatform: StandaloneWindows64
+          BUILD_NAME: win
+        - targetPlatform: StandaloneLinux64
+          BUILD_NAME: linux
+        
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          # UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          # UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildName: asteroids
+      - name: zip package
+        run: |
+          sudo mv build/${{ matrix.targetPlatform }} build/asteroids-${{ matrix.BUILD_NAME }}
+          cd build; zip -r ../asteroids-${{ matrix.BUILD_NAME }}.zip asteroids-${{ matrix.BUILD_NAME }} -x asteroids-${{ matrix.BUILD_NAME }}/*_BurstDebugInformation_DoNotShip/\*
+      - uses: actions/upload-artifact@v3
+        with:
+          name: asteroids-${{ matrix.BUILD_NAME }}-asset
+          path: asteroids-${{ matrix.BUILD_NAME }}.zip
+
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    # Only run the release job if a tag has been pushed
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: build
+      - uses: softprops/action-gh-release@v1
+        with:    
+          fail_on_unmatched_files: true
+          files: |
+            build/**/*.zip
