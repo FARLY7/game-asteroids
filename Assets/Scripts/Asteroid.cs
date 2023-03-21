@@ -3,8 +3,11 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     public Sprite[] sprites;
+    public AudioClip largeExplosionAudio;
+	public AudioClip mediumExplosionAudio;
+	public AudioClip smallExplosionAudio;
 
-    public float size = 1.0f;
+	public float size = 1.0f;
     public float minSize = 0.5f;
     public float maxSize = 1.5f;
     public float speed = 7.0f;
@@ -12,11 +15,13 @@ public class Asteroid : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidBody;
+    private AudioSource _audioSource;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -37,19 +42,29 @@ public class Asteroid : MonoBehaviour
 	{
 		if(collision.gameObject.CompareTag("Missile"))
         {
-			if (this.size > 1.2f)
-			{
-                CreateSplit();
-				CreateSplit();
-				CreateSplit();
-			}
-			else if(this.size > 0.9f)
+            if (this.size > 1.2f)
             {
-				CreateSplit();
-				CreateSplit();
-			}
+                CreateSplit();
+                CreateSplit();
+                CreateSplit();
+                AudioSource.PlayClipAtPoint(this.largeExplosionAudio, this.transform.position);
+                //_audioSource.PlayOneShot(this.largeExplosionAudio);
+            }
+            else if (this.size > 0.9f)
+            {
+                CreateSplit();
+                CreateSplit();
+				AudioSource.PlayClipAtPoint(this.mediumExplosionAudio, this.transform.position);
+				//_audioSource.PlayOneShot(this.mediumExplosionAudio);
+            }
+            else
+            {
+				AudioSource.PlayClipAtPoint(this.smallExplosionAudio, this.transform.position);
+				//_audioSource.PlayOneShot(this.smallExplosionAudio);
+            }
 
-            FindObjectOfType<GameManager>().AsteroidDestroyed(this);
+
+			FindObjectOfType<GameManager>().AsteroidDestroyed(this);
 			Destroy(this.gameObject);	
         }
 	}

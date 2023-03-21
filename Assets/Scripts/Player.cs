@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
 	public Missile missilePrefab;
 
 	private Rigidbody2D _rigidBody;
+	private AudioSource _audioSource;
+
+	public AudioClip thrustAudio;
+	public AudioClip fireAudio;
     
     private bool _thrust;
     private bool _turnRight;
@@ -19,6 +23,7 @@ public class Player : MonoBehaviour
 	{
         _nextFire = 0.0f;
 		_rigidBody = GetComponent<Rigidbody2D>();
+		_audioSource = GetComponent<AudioSource>();
 	}
 
     // Update is called once per frame
@@ -40,6 +45,7 @@ public class Player : MonoBehaviour
 	{
 		if(_thrust) {
             _rigidBody.AddForce(transform.up * this.thrustSpeed);
+			_audioSource.PlayOneShot(this.thrustAudio, 0.25f);
 		}
 
 
@@ -72,5 +78,7 @@ public class Player : MonoBehaviour
     {
 		Missile missile = Instantiate(this.missilePrefab, transform.position, transform.rotation);
 		missile.Fire(transform.up);
+
+		_audioSource.PlayOneShot(this.fireAudio, 0.04f);
 	}
 }
