@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Asteroid : MonoBehaviour
 {
@@ -15,14 +16,12 @@ public class Asteroid : MonoBehaviour
 
     private SpriteRenderer _spriteRenderer;
     private Rigidbody2D _rigidBody;
-    private AudioSource _audioSource;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
-        _audioSource = GetComponent<AudioSource>();
-    }
+	}
 
     private void Start()
     {
@@ -48,24 +47,20 @@ public class Asteroid : MonoBehaviour
                 CreateSplit();
                 CreateSplit();
                 AudioSource.PlayClipAtPoint(this.largeExplosionAudio, this.transform.position);
-                //_audioSource.PlayOneShot(this.largeExplosionAudio);
             }
             else if (this.size > 0.9f)
             {
                 CreateSplit();
                 CreateSplit();
 				AudioSource.PlayClipAtPoint(this.mediumExplosionAudio, this.transform.position);
-				//_audioSource.PlayOneShot(this.mediumExplosionAudio);
             }
             else
             {
 				AudioSource.PlayClipAtPoint(this.smallExplosionAudio, this.transform.position);
-				//_audioSource.PlayOneShot(this.smallExplosionAudio);
             }
 
-
 			FindObjectOfType<GameManager>().AsteroidDestroyed(this);
-			Destroy(this.gameObject);	
+            Destroy(this.gameObject);
         }
 	}
 

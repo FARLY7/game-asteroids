@@ -2,35 +2,38 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-	public Player player;
-	public ParticleSystem explosion;
-	public TMPro.TMP_Text scoreText;
-	public TMPro.TMP_Text livesText;
+	[SerializeField] private Player player;
+	[SerializeField] private ParticleSystem explosion;
 
-	public float respawnTime = 3.0f;
-	public float respawnInvulnerabilityTime = 3.0f;
-	public int lives = 3;
-	public int score = 0;
+	[SerializeField] private TMPro.TMP_Text scoreText;
+	[SerializeField] private TMPro.TMP_Text livesText;
+
+	[SerializeField] private float respawnTime = 3.0f;
+	[SerializeField] private float respawnInvulnerabilityTime = 3.0f;
+	[SerializeField] private int maxLives = 4;
+
+	public int lives { get; private set; }
+	public int score { get; private set; }
+
+	private void Start()
+	{
+		NewGame();
+	}
 
 	public void AsteroidDestroyed(Asteroid asteroid)
 	{
 		this.explosion.Play();
 		this.explosion.transform.position = asteroid.transform.position;
 
-		if (asteroid.size < 0.75f)
-		{
-			this.score += 100;
+		if (asteroid.size < 0.75f) {
+			SetScore(this.score + 100);
 		}
-		else if (asteroid.size < 1.0f)
-		{
-			this.score += 50;
+		else if (asteroid.size < 1.0f) {
+			SetScore(this.score + 50);
 		}
-		else
-		{
-			this.score += 25;
+		else {
+			SetScore(this.score + 25);
 		}
-
-		this.scoreText.text = this.score.ToString();
 	}
 
 	public void PlayerDied()
@@ -38,8 +41,7 @@ public class GameManager : MonoBehaviour
 		this.explosion.Play();
 		this.explosion.transform.position = this.player.transform.position;
 
-		this.lives--;
-		this.livesText.text = this.lives.ToString();
+		SetLives(this.lives - 1);
 
 		if (this.lives <= 0)
 		{
@@ -49,6 +51,43 @@ public class GameManager : MonoBehaviour
 		{
 			Invoke(nameof(Respawn), this.respawnTime);
 		}
+	}
+
+	public void PlayerScored(int score)
+	{
+		this.score += score;
+		this.scoreText.text = this.score.ToString();
+	}
+
+	private void NewGame()
+	{
+		/* Destroy all existing asteroids in the scene */
+		Asteroid[] asteroids = FindObjectsOfType<Asteroid>();
+		for (int i = 0; i < asteroids.Length; i++)
+		{
+			Destroy(asteroids[i].gameObject);
+		}
+
+		SetScore(0);
+		SetLives(this.maxLives);
+		Respawn();
+	}
+
+	private void GameOver()
+	{
+		Invoke(nameof(NewGame), this.respawnTime);
+	}
+
+	private void SetScore(int score)
+	{
+		this.score = score;
+		this.scoreText.text = score.ToString();
+	}
+
+	private void SetLives(int lives)
+	{
+		this.lives = lives;
+		this.livesText.text = lives.ToString();
 	}
 
 	private void Respawn()
@@ -63,13 +102,5 @@ public class GameManager : MonoBehaviour
 	private void TurnOnCollisions()
 	{
 		this.player.gameObject.layer = LayerMask.NameToLayer("Player");
-	}
-
-	private void GameOver()
-	{
-		this.lives = 3;
-		this.score = 0;
-		this.scoreText.text = this.score.ToString();
-		this.livesText.text = this.lives.ToString();
 	}
 }

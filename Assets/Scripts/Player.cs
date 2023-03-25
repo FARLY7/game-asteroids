@@ -48,7 +48,6 @@ public class Player : MonoBehaviour
 			_audioSource.PlayOneShot(this.thrustAudio, 0.25f);
 		}
 
-
         if (!(_turnLeft && _turnRight))
         {
             if (_turnRight)
