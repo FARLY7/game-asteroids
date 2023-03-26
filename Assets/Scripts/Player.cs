@@ -1,4 +1,6 @@
 using UnityEngine;
+//using UnityEngine.Device;
+
 
 public class Player : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class Player : MonoBehaviour
 
 	private Rigidbody2D _rigidBody;
 	private AudioSource _audioSource;
+	private SpriteRenderer _spriteRenderer;
 
 	public AudioClip thrustAudio;
 	public AudioClip fireAudio;
@@ -19,15 +22,48 @@ public class Player : MonoBehaviour
     private bool _fire;
 	private float _nextFire;
 
+	//private Renderer m_renderer;
+	private Camera _camera;
+
 	private void Awake()
 	{
         _nextFire = 0.0f;
 		_rigidBody = GetComponent<Rigidbody2D>();
 		_audioSource = GetComponent<AudioSource>();
+		_spriteRenderer = GetComponent<SpriteRenderer>();
+		_camera = FindObjectOfType<Camera>();
 	}
 
-    // Update is called once per frame
-    private void Update()
+	private void KeepWithinScreenBounds()
+	{
+		float height = _camera.orthographicSize * 2;
+		float width = height * _camera.aspect;
+
+		float playerWidth = _spriteRenderer.bounds.size.x / 2;
+		float playerHeight = _spriteRenderer.bounds.size.y / 2;
+
+		/* X bounds */
+		if (transform.position.x > (width / 2) + playerWidth)
+		{
+			transform.position = new Vector2(0 - (width/2) - playerWidth, transform.position.y);
+		}
+		else if (transform.position.x < (-width / 2) - playerWidth)
+		{
+			transform.position = new Vector2(0 + (width / 2) + playerWidth, transform.position.y);
+		}
+
+		/* Y bounds */
+		if (transform.position.y > (height / 2) + playerHeight)
+		{
+			transform.position = new Vector2(transform.position.x, 0 - (height / 2) - playerHeight);
+		}
+		else if (transform.position.y < (-height / 2) - playerHeight)
+		{
+			transform.position = new Vector2(transform.position.x, 0 + (height / 2) + playerHeight);
+		}
+	}
+
+	private void Update()
     {
         _thrust     = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
         _turnRight  = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
@@ -39,11 +75,14 @@ public class Player : MonoBehaviour
 			_nextFire = Time.time + this.fireRate;
 			Shoot();
 		}
+
+		KeepWithinScreenBounds();
 	}
 
 	private void FixedUpdate()
 	{
-		if(_thrust) {
+		if(_thrust)
+		{
             _rigidBody.AddForce(transform.up * this.thrustSpeed);
 			_audioSource.PlayOneShot(this.thrustAudio, 0.25f);
 		}
