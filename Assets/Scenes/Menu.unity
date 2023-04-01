@@ -859,6 +859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _asteroidSpawner: {fileID: 1496923417}
+  _asteroidSpawnAmount: 7
 --- !u!114 &1496923417 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2559594566839433862, guid: 3785bb038ea49491daf29a2c34bbc32f, type: 3}

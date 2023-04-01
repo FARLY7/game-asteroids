@@ -7,10 +7,12 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] private AsteroidSpawner _asteroidSpawner;
 
-    // Start is called before the first frame update
-    void Start()
+	[SerializeField] private int _asteroidSpawnAmount;
+
+	// Start is called before the first frame update
+	void Start()
     {
-        _asteroidSpawner.Spawn();
+        _asteroidSpawner.Spawn(_asteroidSpawnAmount);
     }
 
     // Update is called once per frame

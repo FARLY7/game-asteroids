@@ -5782,7 +5782,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.64705884, g: 0.84313726, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -10546,6 +10546,7 @@ MonoBehaviour:
   respawnInvulnerabilityTime: 3
   maxLives: 3
   newLifeScore: 10000
+  levelAsteroidAmount: 0400000006000000080000000a0000000b000000
 --- !u!4 &891388520
 Transform:
   m_ObjectHideFlags: 0

@@ -15,11 +15,13 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private float respawnInvulnerabilityTime = 3.0f;
 	[SerializeField] private int maxLives = 4;
 	[SerializeField] private int newLifeScore = 10000;
+	[SerializeField] private int[] levelAsteroidAmount = new int[] { 4, 6, 8, 10, 11 };
 
 	public int lives { get; private set; }
 	public int score { get; private set; }
 
 	private int _newLifeScoreCounter;
+	private int _currentLevel;
 
 	private void Start()
 	{
@@ -40,10 +42,10 @@ public class GameManager : MonoBehaviour
 		this.explosion.Play();
 		this.explosion.transform.position = asteroid.transform.position;
 
-		if (asteroid.size < 0.75f) {
+		if (asteroid.size < asteroid.smallSize) {
 			SetScore(this.score + 100);
 		}
-		else if (asteroid.size < 1.0f) {
+		else if (asteroid.size < asteroid.mediumSize) {
 			SetScore(this.score + 50);
 		}
 		else {
@@ -54,8 +56,7 @@ public class GameManager : MonoBehaviour
 		Debug.Log($"Number of asteroids: {asteroids.Length}");
 		if (asteroids.Length == 1)
 		{
-			Debug.Log("NEXT LEVEL");
-			asteroidSpawner.Invoke(nameof(asteroidSpawner.Spawn), this.respawnTime);
+			NextLevel();
 		}
 	}
 
@@ -96,8 +97,27 @@ public class GameManager : MonoBehaviour
 		SetScore(0);
 		SetLives(this.maxLives);
 		Respawn();
-		asteroidSpawner.Spawn();
 		_newLifeScoreCounter = 0;
+		_currentLevel = 0;
+		asteroidSpawner.Spawn(levelAsteroidAmount[_currentLevel]);
+	}
+
+	private void NextLevel()
+	{
+		_currentLevel++;
+		int asteroidSpawnAmount = 0;
+
+		if(_currentLevel > (levelAsteroidAmount.Length-1))
+		{
+			asteroidSpawnAmount = levelAsteroidAmount[levelAsteroidAmount.Length-1];
+		}
+		else
+		{
+			asteroidSpawnAmount = levelAsteroidAmount[_currentLevel];
+		}
+
+		asteroidSpawner.Spawn(asteroidSpawnAmount);
+		//asteroidSpawner.Invoke(nameof(asteroidSpawner.Spawn), this.respawnTime);
 	}
 
 	private void GameOver()
@@ -119,6 +139,7 @@ public class GameManager : MonoBehaviour
 			/* Prevent divide by zero */
 			if (this.score / this.newLifeScore > _newLifeScoreCounter)
 			{
+				/* If player has surpassed a score threshold that earns a new life */
 				SetLives(this.lives + 1);
 				_newLifeScoreCounter++;
 			}
