@@ -64,12 +64,12 @@ public class Player : MonoBehaviour
         _thrust     = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
         _turnRight  = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
 		_turnLeft   = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
-        _fire       = Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0);
+        _fire       = Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
 
 		if (_fire && Time.time > _nextFire)
 		{
+			Fire();
 			_nextFire = Time.time + this.fireRate;
-			Shoot();
 		}
 
 		if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
@@ -91,7 +91,6 @@ public class Player : MonoBehaviour
 		if(_thrust)
 		{
             _rigidBody.AddForce(transform.up * this.thrustSpeed);
-			
 		}
 
         if (!(_turnLeft && _turnRight))
@@ -119,7 +118,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	private void Shoot()
+	private void Fire()
     {
 		Missile missile = Instantiate(this.missilePrefab, transform.position, transform.rotation);
 		missile.Fire(transform.up, _rigidBody.velocity);

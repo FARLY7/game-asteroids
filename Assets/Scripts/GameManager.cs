@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private TMPro.TMP_Text scoreText;
 	[SerializeField] private TMPro.TMP_Text livesText;
 	[SerializeField] private TMPro.TMP_Text gameOverText;
+	[SerializeField] private TMPro.TMP_Text startGameText;
 
 	[SerializeField] private float respawnTime = 4.0f;
 	[SerializeField] private float respawnInvulnerabilityTime = 3.0f;
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
 
 	private int _newLifeScoreCounter;
 	private int _currentLevel;
+	private bool _gameOver;
 
 	private void Start()
 	{
@@ -31,9 +33,17 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape))
+		if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Escape))
 		{
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+		}
+
+		if (_gameOver)
+		{
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			}
 		}
 	}
 
@@ -86,6 +96,7 @@ public class GameManager : MonoBehaviour
 	private void NewGame()
 	{
 		gameOverText.gameObject.SetActive(false);
+		startGameText.gameObject.SetActive(false);
 
 		/* Destroy all existing asteroids in the scene */
 		Asteroid[] asteroids = FindObjectsOfType<Asteroid>();
@@ -99,7 +110,9 @@ public class GameManager : MonoBehaviour
 		Respawn();
 		_newLifeScoreCounter = 0;
 		_currentLevel = 0;
+		_gameOver = false;
 		asteroidSpawner.Spawn(levelAsteroidAmount[_currentLevel]);
+		TurnOnCollisions();
 	}
 
 	private void NextLevel()
@@ -123,10 +136,8 @@ public class GameManager : MonoBehaviour
 	private void GameOver()
 	{
 		gameOverText.gameObject.SetActive(true);
-		Invoke(nameof(NewGame), this.respawnTime);
-
-		//Invoke(nameof(TurnOnCollisions), respawnInvulnerabilityTime);
-		//SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+		startGameText.gameObject.SetActive(true);
+		_gameOver = true;
 	}
 
 	private void SetScore(int score)
