@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 	private Rigidbody2D _rigidBody;
 	private AudioSource _audioSource;
 	private SpriteRenderer _spriteRenderer;
+	private Camera _camera;
 
 	public AudioClip thrustAudio;
 	public AudioClip fireAudio;
@@ -22,9 +23,7 @@ public class Player : MonoBehaviour
     private bool _fire;
 	private float _nextFire;
 
-	//private Renderer m_renderer;
-	private Camera _camera;
-
+	
 	private void Awake()
 	{
         _nextFire = 0.0f;
@@ -115,7 +114,16 @@ public class Player : MonoBehaviour
 	private void Shoot()
     {
 		Missile missile = Instantiate(this.missilePrefab, transform.position, transform.rotation);
-		missile.Fire(transform.up);
+
+		//float mag = _rigidBody.velocity.magnitude;
+		//if(mag < 1)
+		//{
+		//	mag = 1.0f;
+		//}
+
+		missile.Fire(transform.up, _rigidBody.velocity);
+
+		//Debug.Log($"Vector: {_rigidBody.velocity.}");
 
 		_audioSource.PlayOneShot(this.fireAudio, 0.04f);
 	}
