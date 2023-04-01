@@ -7,9 +7,9 @@ public class PlayerAudio : MonoBehaviour
 {
 	public AudioSource thrustAudio;
 	public AudioSource fireAudio;
+	public AudioClip dieAudio;
 
 	private float _thrustAudioMaxVolume;
-	
 	private IEnumerator _thrustFadeInCoroutine;
 	private IEnumerator _thrustFadeOutCoroutine;
 
@@ -45,6 +45,11 @@ public class PlayerAudio : MonoBehaviour
 	public void Fire()
 	{
 		fireAudio.Play();
+	}
+
+	public void Die()
+	{
+		AudioSource.PlayClipAtPoint(this.dieAudio, this.gameObject.transform.position, 1.0f);
 	}
 
 	private IEnumerator FadeOutCo(AudioSource audioSource, float fadeTime)

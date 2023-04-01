@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 	private SpriteRenderer _spriteRenderer;
 	private Camera _camera;
 	private PlayerAudio _playerAudio;
+
 	public ParticleSystem _particleSystem;
 	
 	private bool _thrust;
@@ -113,7 +114,7 @@ public class Player : MonoBehaviour
 			_rigidBody.velocity = Vector2.zero;
 			_rigidBody.angularVelocity = 0.0f;
 			this.gameObject.SetActive(false);
-
+			_playerAudio.Die();
 			FindObjectOfType<GameManager>().PlayerDied();
 		}
 	}

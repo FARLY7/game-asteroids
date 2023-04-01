@@ -11465,6 +11465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrustAudio: {fileID: 2003079464}
   fireAudio: {fileID: 2003079465}
+  dieAudio: {fileID: 8300000, guid: 04fe02fa07e0144748e06758de7732ad, type: 3}
 --- !u!1001 &2559594566294621669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11518,11 +11519,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2559594566839433862, guid: 3785bb038ea49491daf29a2c34bbc32f, type: 3}
       propertyPath: spawnDistance
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2559594566839433862, guid: 3785bb038ea49491daf29a2c34bbc32f, type: 3}
       propertyPath: trajectoryVariance
-      value: 20
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2559594566839433863, guid: 3785bb038ea49491daf29a2c34bbc32f, type: 3}
       propertyPath: m_Name

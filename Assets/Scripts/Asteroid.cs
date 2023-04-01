@@ -101,7 +101,14 @@ public class Asteroid : MonoBehaviour
 	{
 		if(collision.gameObject.CompareTag("Missile"))
         {
-            if (this.size == this.largeSize)
+			if(!_becameVisible)
+			{
+				/* Do not allow the player to destroy the asteroid until it has
+				 * first entered the screen */
+				return;
+			}
+
+			if (this.size == this.largeSize)
             {
                 CreateSplit();
                 CreateSplit();

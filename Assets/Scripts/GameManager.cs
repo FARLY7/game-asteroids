@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviour
 		}
 
 		Asteroid[] asteroids = FindObjectsOfType<Asteroid>();
-		Debug.Log($"Number of asteroids: {asteroids.Length}");
 		if (asteroids.Length == 1)
 		{
 			NextLevel();
