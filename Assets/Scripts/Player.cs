@@ -1,6 +1,6 @@
 using UnityEngine;
-//using UnityEngine.Device;
-
+using System.Collections;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -10,27 +10,24 @@ public class Player : MonoBehaviour
 	public Missile missilePrefab;
 
 	private Rigidbody2D _rigidBody;
-	private AudioSource _audioSource;
 	private SpriteRenderer _spriteRenderer;
 	private Camera _camera;
-
-	public AudioClip thrustAudio;
-	public AudioClip fireAudio;
-    
-    private bool _thrust;
+	private PlayerAudio _playerAudio;
+	public ParticleSystem _particleSystem;
+	
+	private bool _thrust;
     private bool _turnRight;
     private bool _turnLeft;
     private bool _fire;
 	private float _nextFire;
 
-	
 	private void Awake()
 	{
         _nextFire = 0.0f;
 		_rigidBody = GetComponent<Rigidbody2D>();
-		_audioSource = GetComponent<AudioSource>();
 		_spriteRenderer = GetComponent<SpriteRenderer>();
 		_camera = FindObjectOfType<Camera>();
+		_playerAudio = GetComponent<PlayerAudio>();
 	}
 
 	private void KeepWithinScreenBounds()
@@ -75,6 +72,17 @@ public class Player : MonoBehaviour
 			Shoot();
 		}
 
+		if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+		{
+			this._particleSystem.Play();
+			_playerAudio.Thrust(true);
+		}
+		if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow))
+		{
+			this._particleSystem.Stop();
+			_playerAudio.Thrust(false);
+		}
+
 		KeepWithinScreenBounds();
 	}
 
@@ -83,7 +91,7 @@ public class Player : MonoBehaviour
 		if(_thrust)
 		{
             _rigidBody.AddForce(transform.up * this.thrustSpeed);
-			_audioSource.PlayOneShot(this.thrustAudio, 0.25f);
+			
 		}
 
         if (!(_turnLeft && _turnRight))
@@ -114,17 +122,7 @@ public class Player : MonoBehaviour
 	private void Shoot()
     {
 		Missile missile = Instantiate(this.missilePrefab, transform.position, transform.rotation);
-
-		//float mag = _rigidBody.velocity.magnitude;
-		//if(mag < 1)
-		//{
-		//	mag = 1.0f;
-		//}
-
 		missile.Fire(transform.up, _rigidBody.velocity);
-
-		//Debug.Log($"Vector: {_rigidBody.velocity.}");
-
-		_audioSource.PlayOneShot(this.fireAudio, 0.04f);
+		_playerAudio.Fire();
 	}
 }

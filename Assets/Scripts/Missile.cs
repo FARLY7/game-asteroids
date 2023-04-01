@@ -58,9 +58,7 @@ public class Missile : MonoBehaviour
 	public void Fire(Vector2 direction, Vector2 shipVelocity)
 	{
 		_rigidbody.velocity = direction * speed;
-		Debug.Log($"Before velocity: {_rigidbody.velocity}, ShipVelocity: {shipVelocity}");
 		_rigidbody.AddForce(shipVelocity, ForceMode2D.Impulse);
-		Debug.Log($"After velocity: {_rigidbody.velocity}");
 		Destroy(this.gameObject, maxLifetime);
 	}
 }
