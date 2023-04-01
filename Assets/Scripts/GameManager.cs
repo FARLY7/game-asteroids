@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
 			SetScore(this.score + 50);
 		}
 		else {
-			SetScore(this.score + 25);
+			SetScore(this.score + 20);
 		}
 
 		Asteroid[] asteroids = FindObjectsOfType<Asteroid>();
